@@ -3,7 +3,7 @@ const taskName = ref("");
 const errorMessage = ref("");
 const loading = ref(false);
 
-const onSubmit = () => {
+const onSubmit = async () => {
 	if (!taskName.value.trim()) {
 		errorMessage.value = "Task is required!";
 		return;
@@ -11,10 +11,13 @@ const onSubmit = () => {
 	try {
 		loading.value = true;
 		errorMessage.value = "";
-		console.log("hello");
-		$fetch("/api/tasks", {
+		const result = await $fetch("/api/tasks", {
 			method: "POST",
 			body: { title: taskName.value },
+		});
+
+		navigateTo({ name: "tasks-id",
+			params: { id: result.id },
 		});
 	}
 	catch (e) {
